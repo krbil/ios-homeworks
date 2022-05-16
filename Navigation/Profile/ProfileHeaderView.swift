@@ -23,7 +23,7 @@ class ProfileHeaderView: UIView {
         let imageView = UIImageView(frame: CGRect(x: 16, y: 16, width: 100, height: 100))
         imageView.layer.borderWidth = 3
         imageView.layer.backgroundColor = UIColor.white.cgColor
-        imageView.image = UIImage(named: "")
+        imageView.image = UIImage(named: "00034")
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = imageView.frame.size.width / 2
         imageView.clipsToBounds = true
