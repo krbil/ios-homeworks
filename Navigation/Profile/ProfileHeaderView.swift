@@ -8,62 +8,94 @@
 import UIKit
 
 class ProfileHeaderView: UIView {
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(imageView)
-        addSubview(text)
-        addSubview(textStatus)
-        addSubview(button)
-        addSubview(textFieldStatus)
+        
+        [imageView, text, textStatus, textFieldStatus, button] .forEach {addSubview($0)}
+        
+        NSLayoutConstraint.activate([
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            imageView.widthAnchor.constraint(equalToConstant: 100),
+            imageView.heightAnchor.constraint(equalToConstant: 100),
+
+            text.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+            text.topAnchor.constraint(equalTo: imageView.topAnchor),
+            text.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            text.heightAnchor.constraint(equalToConstant: 30),
+
+            textStatus.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+            textStatus.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -32),
+            textStatus.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            textStatus.heightAnchor.constraint(equalToConstant: 30),
+
+            textFieldStatus.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+            textFieldStatus.topAnchor.constraint(equalTo: textStatus.bottomAnchor, constant: 16),
+            textFieldStatus.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            textFieldStatus.heightAnchor.constraint(equalToConstant: 40),
+            
+            button.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            button.topAnchor.constraint(equalTo: textFieldStatus.bottomAnchor, constant: 16),
+            button.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            button.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
+    
     required init?(coder: NSCoder) {
-        fatalError("init(codrt:) has not been implemented")
+        fatalError("init(coder:) has not been implemented")
     }
-    let imageView: UIImageView = {
-        let imageView = UIImageView(frame: CGRect(x: 16, y: 16, width: 100, height: 100))
+
+    private lazy var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.borderWidth = 3
-        imageView.layer.backgroundColor = UIColor.white.cgColor
+        imageView.layer.borderColor = UIColor.white.cgColor
         imageView.image = UIImage(named: "00034")
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = imageView.frame.size.width / 2
+        imageView.layer.cornerRadius = 50
         imageView.clipsToBounds = true
         return imageView
     } ()
-    let text: UITextView = {
-        let text = UITextView(frame: CGRect(x: 132, y: 27, width: 300, height: 30))
-        text.text = ""
+    
+    private lazy var text: UITextView = {
+        let text = UITextView()
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.text = "Your name"
+        text.textColor = .black
         text.backgroundColor = .lightGray
-        text.font = UIFont.systemFont(ofSize: 14)
+        text.font = UIFont.boldSystemFont(ofSize: 18)
         return text
     } ()
-    let textStatus: UITextView = {
-        let textStatus = UITextView(frame: CGRect(x: 132, y: 80, width: 300, height: 30))
-        textStatus.text = ""
+    
+    private lazy var textStatus: UITextView = {
+        let textStatus = UITextView()
+        textStatus.translatesAutoresizingMaskIntoConstraints = false
+        textStatus.text = "Waiting for something..."
         textStatus.textColor = .gray
         textStatus.backgroundColor = .lightGray
         textStatus.font = UIFont.systemFont(ofSize: 14)
         return textStatus
     } ()
-    let textFieldStatus: UITextField = {
-        let textFieldStatus = UITextField(frame: CGRect(x: 132, y: 126, width: UIScreen.main.bounds.width - 148, height: 40))
+    
+    private lazy var textFieldStatus: UITextField = {
+        let textFieldStatus = UITextField()
+        textFieldStatus.translatesAutoresizingMaskIntoConstraints = false
         textFieldStatus.backgroundColor = .white
+        textFieldStatus.layer.borderColor = UIColor.black.cgColor
         textFieldStatus.layer.borderWidth = 1
         textFieldStatus.layer.cornerRadius = 12
         textFieldStatus.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         textFieldStatus.textColor = .black
         textFieldStatus.addTarget(self, action: #selector(statusTextChanged), for: .editingChanged)
-        textFieldStatus.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textFieldStatus.frame.height))
+        textFieldStatus.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: text.frame.height))
         textFieldStatus.leftViewMode = .always
         return textFieldStatus
     } ()
-    private var statusText:String = ""
-        
-    @objc func statusTextChanged(_ textField: UITextField) {
-            statusText = textField.text!
-    }
-        
-    let button:UIButton = {
-        let button = UIButton(frame: CGRect(x: 16, y: 182, width: UIScreen.main.bounds.width - 32, height: 50))
+    
+    private lazy var button: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .blue
         button.setTitle("Show status", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
@@ -76,7 +108,13 @@ class ProfileHeaderView: UIView {
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     } ()
-        
+    
+    private lazy var statusText:String = ""
+    
+    @objc func statusTextChanged(_ textField: UITextField) {
+        statusText = textField.text!
+    }
+    
     @objc private func buttonPressed() {
         textStatus.text = statusText
     }
